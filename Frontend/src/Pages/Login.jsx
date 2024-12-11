@@ -37,7 +37,8 @@ function Login() {
             //    setUserInfo(data.data)
                console.log(data.data?.isExist)
                setUserInfo(data.data?.isExist)
-              localStorage.setItem("token" , data.data?.authToken)
+               localStorage.setItem("authUser" , JSON.stringify(data.data?.isExist))
+               localStorage.setItem("token" , data.data?.authToken)
                setUserDetails({})
                navigate("/")
                

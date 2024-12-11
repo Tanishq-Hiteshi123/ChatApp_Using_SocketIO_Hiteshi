@@ -11,6 +11,7 @@ function App() {
   const DashboardComponent = lazy(() => import("./Pages/DashBoard"))
   const LoginComponent = lazy(() => import("./Pages/Login"))
   const RegisterComponent = lazy(() => import("./Pages/Register"))
+  const ProfileComponent = lazy(() => import ("./Pages/Profile"))
 
 
 
@@ -32,6 +33,7 @@ function App() {
 
         <Route element = {<PrivateRouter/>}>
         <Route path="/" element = {<DashboardComponent/>} />
+        <Route path="/profile" element = {<ProfileComponent />} />
         </Route>
         <Route path="/login" element = {<LoginComponent/>} />
         <Route path="/register" element = {<RegisterComponent/>} />

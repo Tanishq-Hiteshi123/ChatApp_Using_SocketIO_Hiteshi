@@ -1,15 +1,15 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../Context/userContext'
+import { GroupDropDown } from './GroupDropDown'
 
 function SideBar() {
     const [toggleMenu , setToggleMenu] = useState(false)
-    const {allUsers, allGroups , sendTo , setSendTo} = useContext(UserContext)
+    const {allUsers, allGroups , sendTo , setSendTo , userInfo} = useContext(UserContext)
     const [searchName , setSearchName] = useState("")
     const [searchData , setSearchData] = useState([])
     
-    console.log(sendTo)
- 
-    console.log(allUsers , allGroups)
+  
+
 
     const handleToggleShowMenu = () =>{
         
@@ -23,7 +23,7 @@ function SideBar() {
       let old = [...allUsers , ...allGroups]
      
      setSearchData(old.filter((elem , index) =>{
-         return elem?.name?.includes(e.target.value) || elem?.username?.includes(e.target.value)
+         return elem?.name?.toLowerCase().includes(e.target.value.toLowerCase()) || elem?.username?.toLowerCase().includes(e.target.value.toLowerCase())
       }))
 
       if (e.target.value == "") {
@@ -32,6 +32,10 @@ function SideBar() {
 
     }
 
+    useEffect(() =>{
+    } , [allGroups])
+    console.log(allGroups , "All Groups")
+ 
     
   return (
     <div>
@@ -69,8 +73,8 @@ function SideBar() {
        
        {
          searchData.map((elem , index) =>{
-          
-             return  <p className="block py-2.5 px-4 rounded transition duration-200 w-full hover:text-white cursor-pointer hover:bg-blue-600">{elem.name ? elem.name : elem.username}</p>
+              
+             return  <p onClick={() => setSendTo(elem.id)} className={`block py-2.5 px-4 rounded transition duration-200 w-full hover:text-white cursor-pointer hover:bg-blue-600 ${sendTo == elem.id ? "bg-blue-500" : ""} `}>{elem.name ? elem.name : elem.username}</p>
 
          })
        }
@@ -93,8 +97,14 @@ function SideBar() {
         <nav className='overflow-y-scroll h-[40vh] w-full list'>
         {
              allGroups?.map ((group , index) =>{
-        
-                return <p className="block py-2.5 px-4 rounded transition duration-200 w-full hover:text-white cursor-pointer hover:bg-blue-600">{group.name}</p>
+                    
+               console.log(group.members , userInfo.id , "Thisis")
+                if (group.members.includes(String(userInfo.id))) {
+                  return <div className=''>
+                    <p className=" flex items-center justify-between gap-4 py-2.5 px-4 rounded transition duration-200 w-full hover:text-white cursor-pointer hover:bg-blue-600">{group.name} {userInfo.id == group.createdBy ? <GroupDropDown group = {group}/> : ""} </p>
+                    
+                  </div>
+                }
              })
           }  
    

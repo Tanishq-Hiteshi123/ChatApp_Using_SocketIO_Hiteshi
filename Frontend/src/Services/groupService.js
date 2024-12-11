@@ -10,4 +10,10 @@ const fetchAllGroupsService = async () =>{
 }
 
 
-export {fetchAllGroupsService}
+const createNewGroupService = async(groupDetails) =>{
+       console.log(`${BACKEND_URL}/group/createGroup`)
+       const response = await axios.post(`${BACKEND_URL}/group/createGroup` , groupDetails , {headers : {"authorization" : `Bearer ${localStorage.getItem("token")}`}})
+       
+       return response;
+}
+export {fetchAllGroupsService , createNewGroupService}

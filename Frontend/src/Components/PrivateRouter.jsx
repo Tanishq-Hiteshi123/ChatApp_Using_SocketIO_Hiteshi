@@ -12,7 +12,7 @@ function PrivateRouter() {
     console.log(location.pathname , isLoggedIn)
     
 
-    if ( !userInfo?.id  &&  !isLoggedIn) {
+    if ( location.pathname == "/" &&  !isLoggedIn) {
          return <Navigate to={"/login"} />
     }
     

@@ -17,7 +17,7 @@ function DashBoard() {
     const [currentSocket , setCurrentSocket] = useState(null)
     const [allMessages , setAllMessages] = useState([])
 
-    const {setAllUsers , setAllGroups , userInfo , sendTo} = useContext(UserContext);
+    const {setAllUsers , setAllGroups , userInfo , sendTo , allGroups} = useContext(UserContext);
    console.log(userInfo)
     useEffect(() => {
         // Initialize Socket.IO client
@@ -43,6 +43,15 @@ function DashBoard() {
                  return [...prev , data.newMessage]
              })
 
+        })
+
+
+        socket.on("group_created" , (data) =>{
+           console.log(data)
+           console.log(allGroups)
+           setAllGroups((prev) =>{
+               return [...prev , data.newGroup]
+           })
         })
 
         // Clean up connection on unmount
