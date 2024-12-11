@@ -1,0 +1,1 @@
+export const GROUP_CREATED = "group_created"
