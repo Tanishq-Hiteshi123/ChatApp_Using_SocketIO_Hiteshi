@@ -28,7 +28,7 @@ function App() {
      <Router>
 
      <Suspense fallback = {<>Loading...</>}>
-
+     
       <Routes>
 
         <Route element = {<PrivateRouter/>}>
