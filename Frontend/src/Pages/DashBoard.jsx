@@ -9,7 +9,8 @@ import { fetchAllTheUsersService } from '../Services/userService'
 import { fetchAllGroupsService } from '../Services/groupService'
 import {io} from 'socket.io-client'
 import {v4 as uuidV4} from 'uuid'
-import { fetchAllMessagesService } from '../Services/messageService'
+import { fetchAllGroupMessageByIdService, fetchAllMessagesService } from '../Services/messageService'
+
 
 const SOCKET_SERVER_URL = "http://localhost:8080"
 function DashBoard() {
@@ -17,7 +18,7 @@ function DashBoard() {
     const [currentSocket , setCurrentSocket] = useState(null)
     const [allMessages , setAllMessages] = useState([])
 
-    const {setAllUsers , setAllGroups , userInfo , sendTo , allGroups} = useContext(UserContext);
+    const {setAllUsers , setAllGroups , userInfo , sendTo , allGroups , groupIdToSend} = useContext(UserContext);
    console.log(userInfo)
     useEffect(() => {
         // Initialize Socket.IO client
@@ -52,6 +53,16 @@ function DashBoard() {
            setAllGroups((prev) =>{
                return [...prev , data.newGroup]
            })
+        })
+
+        socket.on("new_member_added_to_group" , (data) =>{
+          
+           
+
+              setAllGroups([...data.newUpdatedGroups])
+               console.log( "Event Of new_member_added_to_group" , data )
+            
+
         })
 
         // Clean up connection on unmount
@@ -98,12 +109,31 @@ function DashBoard() {
          }
     }
 
+    else {
+       try {
+        //  API for fetching all the message of a particular Group 
+
+         if (groupIdToSend) {
+          
+            const {data} = await fetchAllGroupMessageByIdService(groupIdToSend)
+            
+            console.log("Grp Messages " , data)
+            setAllMessages(data.data.allGroupMessage)
+           
+
+         }
+
+       } catch (error) {
+            console.log(error)
+       }
+    }
+
   }
   useEffect(() =>{
     
       fetchAllMessages ()
 
-  } , [sendTo])
+  } , [sendTo, groupIdToSend])
 
 
   useEffect(() =>{
@@ -122,11 +152,23 @@ function DashBoard() {
              <div className=' chat message-area h-[90vh] p-16 overflow-y-scroll '>
                   
                {
-                 allMessages.map((elem , index) =>{
-                     console.log(elem)
-                    return <SingleMessage key={index}  elem = {elem} />
+                groupIdToSend ?  allMessages.map((elem , index) =>{
+                  if ( elem.groupId == groupIdToSend) {
+                     
+                    return <SingleMessage key={index} elem={elem}  />
+                  }
+                 
+              
 
-                 })
+           })  :  allMessages.map((elem , index) =>{
+            if ((userInfo.id == elem.senderId || userInfo.id == elem.receiverId)  && (sendTo == elem.receiverId || sendTo == elem.senderId)) {
+               
+              return <SingleMessage key={index} elem={elem}  />
+            }
+           
+        
+
+     })
                }
                   
              </div>

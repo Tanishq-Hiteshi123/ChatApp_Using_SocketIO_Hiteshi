@@ -11,8 +11,9 @@ export const UserContextProvider = ({ children }) => {
    const [isGroupModalOpen , setIsGroupModalOpen] = useState(false)
    const [isAddMemberModalOpen , setIsAddMemberModalOpen] = useState(false)
    const [sendTo , setSendTo] = useState("")
+   const [groupIdToSend , setGroupIdToSend] = useState("")
 
-   return <UserContext.Provider value={{ userInfo, setUserInfo, allUsers, setAllUsers, allGroups, setAllGroups , sendTo , setSendTo , isGroupModalOpen , setIsGroupModalOpen , isAddMemberModalOpen , setIsAddMemberModalOpen }}>
+   return <UserContext.Provider value={{ userInfo, setUserInfo, allUsers, setAllUsers, allGroups, setAllGroups , sendTo , setSendTo , isGroupModalOpen , setIsGroupModalOpen , isAddMemberModalOpen , setIsAddMemberModalOpen , groupIdToSend , setGroupIdToSend }}>
       {children}
    </UserContext.Provider>
 

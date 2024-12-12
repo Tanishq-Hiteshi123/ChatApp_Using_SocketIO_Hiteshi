@@ -37,5 +37,34 @@ const getAllMessageOne = async(req , res) =>{
     }
 
 }
+const getAllGroupMessagesById = async (req , res) =>{
+ 
+    try {
+ 
+        const {groupId} = req.params;
 
-module.exports = {getAllMessageOne}
+        if (!groupId) {
+
+             return errorHandler(res , 400 , "Please Provide the groupId")
+
+        }
+
+        const allGroupMessage = await Message.findAll({
+            where: {
+                groupId 
+             }
+        })
+
+        return responseHandler(res , 200 , "All Group Messages" , {allGroupMessage})
+
+        
+
+    }
+    catch (error) {
+        
+         return unknownErrorHandler(res , error.message)
+
+    }
+    
+}
+module.exports = {getAllMessageOne , getAllGroupMessagesById}

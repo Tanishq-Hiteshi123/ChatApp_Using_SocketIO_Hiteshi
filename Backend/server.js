@@ -12,6 +12,7 @@ const { initizationOfSocket } = require("./configurations/socketConfig.js")
 const User = require("./Models/userModel.js")
 const Message = require("./Models/messageModel.js")
 const { where } = require("sequelize")
+const Group = require("./Models/groupModel.js")
 
 // Backend Connectivity :-
 sequelize.authenticate()
@@ -63,6 +64,34 @@ io.on("connection" , (socket) =>{
                     groupId : receiverId,
                     
               })
+            
+          //     BroadCast this message To All the user inside that group only :-
+               const groupDetails = await Group.findByPk(receiverId) 
+
+               console.log("groupDetails " , groupDetails)
+
+               const senderDetails = await User.findByPk(senderId)
+               const senderUserInfo = senderDetails.dataValues;
+
+               groupDetails.members.forEach(async(memberId , index) =>{
+                    
+                     const memberDetails = await User.findByPk(memberId)
+
+                     const memberDataValues = memberDetails.dataValues
+                     const socketDetails = io.sockets.sockets.get(memberDataValues.socketId)
+                      
+                     if (socketDetails) {
+                         
+                          socketDetails.emit("receivedMessage" , {
+                               newMessage,
+                               senderUserInfo
+                          })
+
+                     }
+                     
+
+               })
+          //     console.log("Group Message " , newMessage)
 
           
           }
@@ -73,16 +102,21 @@ io.on("connection" , (socket) =>{
                     receiverId,
                     
               })
+              //      Emit the Message to receiver :-
+              const receiverSocketId = await User.findByPk(receiverId); 
+    
+              const senderDetails = await User.findByPk(senderId)
+    
+              const senderUserInfo = senderDetails.dataValues;
+              // console.log(receiverSocketId)
+              if (receiverSocketId && receiverSocketId.dataValues && receiverSocketId.dataValues.socketId) {
+                  io.to(receiverSocketId.dataValues.socketId).emit("receivedMessage", {
+                     newMessage ,
+                     senderUserInfo
+                  });
+              }
           }
 
-          //      Emit the Message to receiver :-
-          const receiverSocketId = await User.findByPk(receiverId); 
-          // console.log(receiverSocketId)
-          if (receiverSocketId && receiverSocketId.dataValues && receiverSocketId.dataValues.socketId) {
-              io.to(receiverSocketId.dataValues.socketId).emit("receivedMessage", {
-                 newMessage
-              });
-          }
 
      })
 

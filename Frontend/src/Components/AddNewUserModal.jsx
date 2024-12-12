@@ -13,12 +13,12 @@ import { Label } from "@/components/ui/label"
 import { useContext, useEffect, useState } from "react"
 import { CheckboxDemo } from "./CheckBoxComponent"
 import { UserContext } from "../Context/userContext"
-import { createNewGroupService } from "../Services/groupService"
+import { addNewMemberToGroupService, createNewGroupService } from "../Services/groupService"
 import { isCheck } from "../lib/utils"
 
 export function AddNewUserModal({group}) {
 
-     const {allUsers , isAddMemberModalOpen , setIsAddMemberModalOpen} = useContext(UserContext)
+     const {allUsers , isAddMemberModalOpen , setIsAddMemberModalOpen , allGroups, setAllGroups} = useContext(UserContext)
 
      const [addNewMemberDetails , setAddNewMemberDetails] = useState({name : group.name , members : []})
 
@@ -35,7 +35,7 @@ export function AddNewUserModal({group}) {
         }
         else {
     
-          setAddNewMemberDetails({...addNewMemberDetails , members : [...addNewMemberDetails.members , elem.id]})
+          setAddNewMemberDetails({...addNewMemberDetails , members : [...addNewMemberDetails.members , String(elem.id)]})
         }
       }
     useEffect (() =>{
@@ -44,11 +44,21 @@ export function AddNewUserModal({group}) {
       
     } , [])
 
-    const handleAddNewMembers = () =>{
+    const handleAddNewMembers = async () =>{
         
-         console.log(addNewMemberDetails)
+       try {
+         const {data} = await addNewMemberToGroupService(addNewMemberDetails)
+         
+         if (data.success) {
+          
+              console.log(data)
 
-         setIsAddMemberModalOpen(false)
+              setIsAddMemberModalOpen(false)
+            }
+       }
+       catch (error) {
+         throw new Error (error)
+       }
 
     }
 

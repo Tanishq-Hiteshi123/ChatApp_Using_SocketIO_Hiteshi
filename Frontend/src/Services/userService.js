@@ -24,4 +24,12 @@ const fetchAllTheUsersService = async() =>{
       
 
 }
-export {registerService , loginService , fetchAllTheUsersService}
+
+const getUserByIdService = async(userId) =>{
+    
+     const response = await axios.get(`${BACKEND_URL}/user/getUserById/${userId}` , {headers : {"authorization" : `Bearer ${localStorage.getItem("token")}`}})
+
+     return response;
+
+}
+export {registerService , loginService , fetchAllTheUsersService , getUserByIdService}

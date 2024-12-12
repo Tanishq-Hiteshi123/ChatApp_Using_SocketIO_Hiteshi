@@ -7,6 +7,7 @@ function Login() {
    
     const [userDetails , setUserDetails] = useState({})
     const {setUserInfo} = useContext(UserContext)
+    const [error , setError] = useState("")
 
      const navigate = useNavigate()
 
@@ -23,7 +24,8 @@ function Login() {
              ...userDetails,
              [e.target.name] : e.target.value
          })
-
+         
+         setError("")
     }
 
     const handleLoginUser = async(e) =>{
@@ -47,6 +49,7 @@ function Login() {
             }
           } catch (error) {
              console.log(error)
+             setError(error.response.data.message)
           }
 
     }
@@ -59,9 +62,10 @@ function Login() {
       </div>
       
       <div className='rightSide h-max bg-white rounded-md w-max p-4'>
+
         <form className='flex items-center justify-center p-5 pt-8 flex-col gap-5'>
            
-             
+                {error && <p className='text-red-500 text-bold'>*{error}</p> }
          
                 <input type="email" placeholder='email' className="placeholder:italic p-2 border-2 border-gray-400 w-[20vw] " name = "email" onChange={handleChange}  value={userDetails.email} />
                 <input type="password" placeholder='password' className="placeholder:italic p-2 border-2 border-gray-400 w-[20vw] " name = "password" onChange={handleChange} value={userDetails.password} />

@@ -141,5 +141,29 @@ const getAllUser = async(req , res) =>{
 
 }
 
+const getUserById = async(req , res) =>{
+     
+       try {
+           const {userId} = req.params;
 
-module.exports  = {registerUser , loginUser , getUserDetails , getAllUser}
+           if (!userId) {
+               
+                return errorHandler(res , 400 , "User Id is not provided")
+
+           }
+
+           const userDetails = await User.findByPk(userId)
+
+           if (!userDetails.dataValues) {
+                return errorHandler(res , 404 , "User not found with this id")
+           }
+
+           return responseHandler(res , 200 , "User Details ", userDetails)
+       }
+       catch (error) {
+           return unknownErrorHandler(res , error.message)
+       }
+
+}
+
+module.exports  = {registerUser , loginUser , getUserDetails , getAllUser , getUserById}

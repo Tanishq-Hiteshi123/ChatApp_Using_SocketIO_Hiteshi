@@ -16,4 +16,13 @@ const createNewGroupService = async(groupDetails) =>{
        
        return response;
 }
-export {fetchAllGroupsService , createNewGroupService}
+
+const addNewMemberToGroupService = async (groupDetails) => {
+       
+       const response = await axios.post(`${BACKEND_URL}/group/addNewMember` , groupDetails , {headers : {"authorization" : `Bearer ${localStorage.getItem("token")}`}})
+
+       return response
+        
+
+}
+export {fetchAllGroupsService , createNewGroupService , addNewMemberToGroupService}

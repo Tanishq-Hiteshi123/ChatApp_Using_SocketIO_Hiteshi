@@ -9,4 +9,4 @@ const responseHandler = (res , statusCode , message , data) =>{
 
 }
 
-module.exports = responseHandler
+module.exports = responseHandler    

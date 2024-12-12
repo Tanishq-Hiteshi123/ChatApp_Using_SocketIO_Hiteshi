@@ -11,4 +11,12 @@ const fetchAllMessagesService = async ({user1 , user2}) =>{
 
 }
 
-export {fetchAllMessagesService}
+
+const fetchAllGroupMessageByIdService = async (groupId) =>{
+  
+    const response = await axios.get(`${BACKEND_URL}/message/allGroupMessageById/${groupId}` , {headers : {"authorization" : `Bearer ${localStorage.getItem("token")}`}})
+
+    return response
+
+}
+export {fetchAllMessagesService , fetchAllGroupMessageByIdService}

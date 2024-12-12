@@ -4,7 +4,7 @@ import { UserContext } from '../Context/userContext';
 function MessageBar({allMessages , setAllMessages , socket}) {
 
   const [content , setContent] = useState("")
-  const {sendTo , userInfo} = useContext(UserContext)
+  const {sendTo , userInfo , groupIdToSend} = useContext(UserContext)
   console.log(sendTo)
 
   const handleChange = (e) =>{
@@ -37,6 +37,19 @@ function MessageBar({allMessages , setAllMessages , socket}) {
      
         setContent("")
 
+      }
+
+      else {
+        //   have to send to the group :-
+        if (content.trim() == "") {
+           return;
+        }
+        socket.emit("send_message" , {content , senderId : userInfo.id , receiverId : groupIdToSend , isGroup : true})
+
+        // setAllMessages((prev) => {
+        //    return [...prev , data]
+        // })
+        setContent("")
       }
 
   }

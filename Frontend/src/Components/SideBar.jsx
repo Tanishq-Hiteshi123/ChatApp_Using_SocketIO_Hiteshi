@@ -4,7 +4,7 @@ import { GroupDropDown } from './GroupDropDown'
 
 function SideBar() {
     const [toggleMenu , setToggleMenu] = useState(false)
-    const {allUsers, allGroups , sendTo , setSendTo , userInfo} = useContext(UserContext)
+    const {allUsers, allGroups , sendTo , setSendTo , userInfo , groupIdToSend , setGroupIdToSend} = useContext(UserContext)
     const [searchName , setSearchName] = useState("")
     const [searchData , setSearchData] = useState([])
     
@@ -34,7 +34,23 @@ function SideBar() {
 
     useEffect(() =>{
     } , [allGroups])
-    console.log(allGroups , "All Groups")
+    // console.log(allGroups , "All Groups")
+
+    const handleSelectGroup = (group) =>{
+      
+         setGroupIdToSend(group.id)
+
+         setSendTo("")
+
+    }
+
+    const handleSelectUser = (elem) =>{
+       setSendTo(elem.id)
+       console.log(elem)
+       setGroupIdToSend("")
+    }
+
+    console.log("groupIdToSend" , groupIdToSend)
  
     
   return (
@@ -74,7 +90,7 @@ function SideBar() {
        {
          searchData.map((elem , index) =>{
               
-             return  <p onClick={() => setSendTo(elem.id)} className={`block py-2.5 px-4 rounded transition duration-200 w-full hover:text-white cursor-pointer hover:bg-blue-600 ${sendTo == elem.id ? "bg-blue-500" : ""} `}>{elem.name ? elem.name : elem.username}</p>
+             return  <p onClick={() => handleSelectUser(elem)} className={`block py-2.5 px-4 rounded transition duration-200 w-full hover:text-white cursor-pointer hover:bg-blue-600 ${sendTo == elem.id ? "bg-blue-500" : ""} `}>{elem.name ? elem.name : elem.username}</p>
 
          })
        }
@@ -87,7 +103,7 @@ function SideBar() {
           {
              allUsers?.map ((user , index) =>{
         
-                return <p onClick={() => setSendTo(user.id)} className={`block py-2.5 px-4 rounded transition duration-200 w-full hover:text-white cursor-pointer hover:bg-blue-600 ${sendTo == user.id ? "bg-blue-500" : ""} `}>{user.username}</p>
+                return <p onClick={() => handleSelectUser(user)} className={`block py-2.5 px-4 rounded transition duration-200 w-full hover:text-white cursor-pointer hover:bg-blue-600 ${sendTo == user.id ? "bg-blue-500" : ""} `}>{user.username}</p>
              })
           }       
     
@@ -100,8 +116,8 @@ function SideBar() {
                     
                console.log(group.members , userInfo.id , "Thisis")
                 if (group.members.includes(String(userInfo.id))) {
-                  return <div className=''>
-                    <p className=" flex items-center justify-between gap-4 py-2.5 px-4 rounded transition duration-200 w-full hover:text-white cursor-pointer hover:bg-blue-600">{group.name} {userInfo.id == group.createdBy ? <GroupDropDown group = {group}/> : ""} </p>
+                  return <div className='' onClick={() => handleSelectGroup(group)}>
+                    <p className={` ${group.id == groupIdToSend ? "bg-blue-500" : ""} flex items-center justify-between gap-4 py-2.5 px-4 rounded transition duration-200 w-full hover:text-white cursor-pointer hover:bg-blue-600`}>{group.name} {userInfo.id == group.createdBy ? <GroupDropDown group = {group}/> : ""} </p>
                     
                   </div>
                 }
